@@ -1,0 +1,19 @@
+# Redirect all requests to index.html (for client-side routing)
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
+
+# Ensure that trailing slashes are not added to URLs
+RewriteCond %{REQUEST_URI} ^/[^/]+/$
+RewriteRule ^(.*)/$ /$1 [R=301,L]
+
+# Serve gzip-compressed files if available
+RewriteCond %{REQUEST_FILENAME}.gz -f
+RewriteRule ^(.*)\.js$ $1\.js\.gz [QSA,L]
+RewriteRule ^(.*)\.css$ $1\.css\.gz [QSA,L]
+
+# Cache static assets for a year (change the value to suit your needs)
+<FilesMatch "\.(js|css|png|jpg|jpeg|gif|ico|woff|woff2|eot|ttf|otf|svg)$">
+    Header set Cache-Control "max-age=31536000, public"
+</FilesMatch>

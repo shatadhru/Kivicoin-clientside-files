@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+
+/* Apply custom styles to the scrollbar */
+::-webkit-scrollbar {
+  width: 2px; /* Set the width of the scrollbar */
+  z-index: 10000000; /* Set a very high z-index */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Transparent background for the track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cca354; /* Color of the scrollbar thumb (golden color) */
+  border-radius: 10px; /* Rounded corners for the scrollbar thumb */
+}
+
+/* Optional: Style the hover state for the scrollbar thumb */
+::-webkit-scrollbar-thumb:hover {
+  background: #b88c40; /* Slightly darker shade for hover effect */
+}
