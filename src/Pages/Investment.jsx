@@ -4,7 +4,7 @@ import Slider from "@mui/material/Slider";
 import Table from "../Components/Table";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 
-function Investment() {
+function Investment({ UserEmail }) {
   return (
     <div>
       <section className="mt-16 ml-2 lg:ml-16 mr-2 lg:mr-10">
@@ -27,10 +27,9 @@ function Investment() {
 
         {/* Packages Table */}
 
-
         {/* Investment Table */}
         <div className="investment mt-6">
-          <Table />
+          <Table UserEmail={UserEmail} />
         </div>
       </section>
     </div>

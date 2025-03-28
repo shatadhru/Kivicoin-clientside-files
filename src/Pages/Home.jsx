@@ -78,7 +78,9 @@ function Home(props) {
     {
       title: "Investments",
       icon: FaChartLine,
-      pageLink: () => setPage(<Investment />) && setHeading("Investments"),
+      pageLink: () =>
+        setPage(<Investment UserEmail={user_email} />) &&
+        setHeading("Investments"),
     },
     {
       title: "Profit Rate",
@@ -88,7 +90,7 @@ function Home(props) {
     {
       title: "Plans",
       icon: FaClipboardList,
-      pageLink: () => setPage(<Plans />),
+      pageLink: () => setPage(<Plans UserEmail={user_email} />),
     },
     {
       title: "Refers",
@@ -98,7 +100,7 @@ function Home(props) {
     {
       title: "Accounts",
       icon: FaUsers,
-      pageLink: () => setPage(<Account />),
+      pageLink: () => setPage(<Account setPage={setPage} userId={user_id} />),
     },
     {
       title: "Transactions",
@@ -232,6 +234,8 @@ function Home(props) {
             </div>
             <div className="devider w-[%] h-[0.5px] bg-gray-800 mt-6"></div>
             {page}
+
+
           </div>
         </div>
       </section>

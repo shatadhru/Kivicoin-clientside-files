@@ -16,6 +16,9 @@ import { useNavigate } from "react-router-dom";
  import { Link } from "react-router-dom";
 
 
+ import { auth, providor } from "../Components/Authentication/Firebase.jsx";
+ import { signInWithPopup } from "firebase/auth";
+
 
 function Register() {
   const [name, setName] = useState("");
@@ -25,6 +28,54 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const navigate = useNavigate();
+
+
+const GoogleAuthSuccessFull = async (userData) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/google/auth/kiviuser/data",
+      userData
+    );
+
+    // Assuming the response contains the necessary user info and token
+    if (response.data?.token) {
+      const { token, user_id, user_email } = response.data;
+      localStorage.setItem("authToken", token);
+      localStorage.setItem("userId", user_id);
+      localStorage.setItem("userEmail", user_email);
+      toast.success("Login successful!", { position: "top-right" });
+      navigate("/dashboard"); // Redirect user to dashboard after successful Google login
+    }
+
+    console.log("User data sent to backend:", response.data);
+  } catch (error) {
+    console.error("Error sending user data to backend:", error);
+    toast.error("Google login failed. Please try again.", {
+      position: "top-right",
+    });
+  }
+};
+
+
+// Handle Google Login
+const handleGoogleLogin = async () => {
+  try {
+    signInWithPopup(auth, providor).then((data) => {
+      const userData = {
+        uid: data.user.uid,
+        displayName: data.user.displayName,
+        email: data.user.email,
+        photoURL: data.user.photoURL,
+      };
+      setUserData(userData);
+      GoogleAuthSuccessFull(userData);
+      console.log(userData);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -275,7 +326,11 @@ function Register() {
         </Divider>
         <p className="text-center text-gray-400">Continue with</p>
         <div className="social_login flex gap-6 items-center justify-center mt-3">
-          <FcGoogle size={26} />
+          <FcGoogle
+            size={26}
+            onClick={handleGoogleLogin}
+            className="cursor-pointer"
+          />
           <FaFacebook color="#2583FFFF" size={26} />
           <FaGithub color="#FFFFFFFF" size={26} />
         </div>

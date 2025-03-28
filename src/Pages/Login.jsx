@@ -9,8 +9,14 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { useAuth } from "../Components/Authentication/Authcontext.jsx";
 
+
+import {
+  auth,
+  providor,
+  FacebookAuthProvidor,
+ } from "../Components/Authentication/Firebase.jsx";
+import { signInWithPopup } from "firebase/auth"
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -18,24 +24,66 @@ function Login() {
   const [userData, setUserData] = useState("");
   const navigate = useNavigate(); // React Router এর হুক
 
-  // Handle Google Login
-  const handleGoogleLogin = async () => {
-    try {
-      await googleLogin();
-      navigate("/dashboard");
-    } catch (error) {
-      alert(error.message);
+
+
+  
+const GoogleAuthSuccessFull = async (userData) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/google/auth/kiviuser/data",
+      userData
+    );
+
+    // Assuming the response contains the necessary user info and token
+    if (response.data?.token) {
+      const { token, user_id, user_email } = response.data;
+      localStorage.setItem("authToken", token);
+      localStorage.setItem("userId", user_id);
+      localStorage.setItem("userEmail", user_email);
+      toast.success("Login successful!", { position: "top-right" });
+      navigate("/dashboard"); // Redirect user to dashboard after successful Google login
     }
-  };
+
+    console.log("User data sent to backend:", response.data);
+  } catch (error) {
+    console.error("Error sending user data to backend:", error);
+    toast.error("Google login failed. Please try again.", {
+      position: "top-right",
+    });
+  }
+};
+
+
+// Handle Google Login
+const handleGoogleLogin = async () => {
+  try {
+    signInWithPopup(auth, providor).then((data) => {
+      const userData = {
+        uid: data.user.uid,
+        displayName: data.user.displayName,
+        email: data.user.email,
+        photoURL: data.user.photoURL,
+      };
+      setUserData(userData);
+      GoogleAuthSuccessFull(userData);
+      console.log(userData);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 
   // Handle Facebook Login
   const handleFacebookLogin = async () => {
-    try {
-      await facebookLogin();
-      navigate("/dashboard");
-    } catch (error) {
-      alert(error.message);
-    }
+  try {
+    signInWithPopup(auth, FacebookAuthProvidor).then((data) => {
+      
+      console.log(data);
+    });
+  } catch (error) {
+    console.log(error);
+  }
   };
 
   // Handle GitHub Login
@@ -48,17 +96,6 @@ function Login() {
     }
   };
 
-  const GoogleAuthSuccessFull = async (userData) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/google/auth/kiviuser/data",
-        userData
-      );
-      console.log("User data sent to backend:", response.data);
-    } catch (error) {
-      console.error("Error sending user data to backend:", error);
-    }
-  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -190,7 +227,11 @@ function Login() {
 
         {/* Social Login Icons */}
         <div className="social_login flex gap-6 items-center justify-center mt-3">
-          <FcGoogle size={26} onClick={handleGoogleLogin} />
+          <FcGoogle
+            size={26}
+            onClick={handleGoogleLogin}
+            className="cursor-pointer"
+          />
           <FaFacebook
             color="#2583FFFF"
             size={26}

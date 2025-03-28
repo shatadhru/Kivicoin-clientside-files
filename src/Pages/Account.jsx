@@ -2,8 +2,12 @@ import { RiAccountBox2Fill } from "react-icons/ri";
 import { AiOutlineSecurityScan } from "react-icons/ai";
 import { FaDollarSign } from "react-icons/fa";
 import { FiCreditCard } from "react-icons/fi"; // Add credit card icon
+import Deposite from "./Deposite";
+import Withdrawal from "./Withdrawal";
+import ManageProfile from "./ManageProfile";
+import PasswordChange from "./PasswordChange";
 
-function Account() {
+function Account({ setPage, userId }) {
   return (
     <div className="max-w-7xl mx-auto lg:mt-6 px-4 sm:px-6 lg:px-8">
       <section className="py-8">
@@ -37,10 +41,16 @@ function Account() {
                 <strong>Balance:</strong> $500.00
               </p>
               <div className="flex space-x-4 mt-4">
-                <button className="w-1/2 py-2 px-4 bg-black text-[#CCA354] font-semibold rounded-lg hover:bg-[#333] transition duration-200">
+                <button
+                  className="w-1/2 py-2 px-4 bg-black text-[#CCA354] font-semibold rounded-lg hover:bg-[#333] transition duration-200"
+                  onClick={() => setPage(<Deposite />)}
+                >
                   Deposit
                 </button>
-                <button className="w-1/2 py-2 px-4 bg-black text-[#CCA354] font-semibold rounded-lg hover:bg-[#333] transition duration-200">
+                <button
+                  className="w-1/2 py-2 px-4 bg-black text-[#CCA354] font-semibold rounded-lg hover:bg-[#333] transition duration-200"
+                  onClick={() => setPage(<Withdrawal />)}
+                >
                   Withdraw
                 </button>
               </div>
@@ -68,10 +78,13 @@ function Account() {
               </p>
             </div>
             {/* Manage Button */}
-            <button className="mt-4 w-full py-2 px-4 bg-black text-[#CCA354] font-semibold rounded-lg hover:bg-[#333] transition duration-200">
+            <button
+              className="mt-4 w-full py-2 px-4 bg-black text-[#CCA354] font-semibold rounded-lg hover:bg-[#333] transition duration-200"
+              onClick={() => setPage(<ManageProfile userId={userId} />)}
+            >
               Manage Profile
             </button>
-          </div>
+          </div> 
 
           {/* Security Section */}
           <div className="bg-white dark:bg-[#CCA354] rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 p-6">
@@ -92,7 +105,7 @@ function Account() {
               </p>
             </div>
             {/* Manage Button */}
-            <button className="mt-8 w-full py-2 px-4 bg-black text-[#CCA354] font-semibold rounded-lg hover:bg-[#333] transition duration-200">
+            <button className="mt-8 w-full py-2 px-4 bg-black text-[#CCA354] font-semibold rounded-lg hover:bg-[#333] transition duration-200" onClick={() => {setPage(<PasswordChange />)}}>
               Manage Security
             </button>
           </div>

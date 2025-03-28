@@ -26,7 +26,7 @@ function Dashboard({ Userid, Useremail }) {
 
     //Important Data Fetching 
     
-    socket.emit("user-id" , Userid);
+    socket.emit("user-email", Useremail);
 
 
     socket.on("user-data" , (User_data_) =>{
@@ -66,6 +66,7 @@ function Dashboard({ Userid, Useremail }) {
           <h1 className="text-[30px] sm:text-[40px] font-bold">
             Hello, {User_data.name}
           </h1>
+          
 
           <p className="text-sm sm:text-base">
             Your financial journey is growing stronger every day. 😊{" "}

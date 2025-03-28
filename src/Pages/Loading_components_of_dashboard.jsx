@@ -3,10 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Preloader from "../Components/Preloader";
 import Home from "../Pages/Home";
 
-function Loading_components_of_dashboard() {
-  const [userdata, setUserdata] = useState(null); // null represents loading state
-  const [user_id, setUser_id] = useState("");
-  const [user_email, set_user_email] = useState("");
+function LoadingComponentsOfDashboard() {
+  const [userData, setUserData] = useState(null); // null represents loading state
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,20 +13,17 @@ function Loading_components_of_dashboard() {
     const email = localStorage.getItem("userEmail");
 
     if (token && userId && email) {
-      setUserdata({ userId, email });
-      setUser_id(userId);
-      set_user_email(email);
+      setUserData({ userId, email });
     } else {
-      // If no data found, redirect to login page
-      navigate("/login");
+      navigate("/login"); // Redirect to login if no user data is found
     }
   }, [navigate]);
 
-  if (userdata === null) {
+  if (userData === null) {
     return <Preloader />; // Show Preloader while loading
   }
 
-  return <Home user_id={user_id} user_email={user_email} />;
+  return <Home user_id={userData.userId} user_email={userData.email} />;
 }
 
-export default Loading_components_of_dashboard;
+export default LoadingComponentsOfDashboard;

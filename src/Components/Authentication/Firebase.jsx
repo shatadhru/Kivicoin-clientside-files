@@ -1,42 +1,21 @@
-import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  FacebookAuthProvider,
-  GithubAuthProvider,
-} from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getAnalytics } from "firebase/analytics";
 
-// Firebase Configuration
+import { initializeApp } from "firebase/app";
+import {getAuth , GoogleAuthProvider , FacebookAuthProvider } from "firebase/auth";
+
 const firebaseConfig = {
-  apiKey: "AIzaSyAS5BWUB3fjFOXxOuSh5N0kXc_dvX4SBqQ",
-  authDomain: "kivicoin-389a4.firebaseapp.com",
-  databaseURL: "https://kivicoin-389a4-default-rtdb.firebaseio.com",
-  projectId: "kivicoin-389a4",
-  storageBucket: "kivicoin-389a4.firebasestorage.app",
-  messagingSenderId: "903589174066",
-  appId: "1:903589174066:web:531ab4a0858c2b4fdd552b",
-  measurementId: "G-7XCQ55W3QV",
+  apiKey: "AIzaSyCicT01sLYF9k57VVaOkMTq8O6LKl8CWVM",
+  authDomain: "kivicoin-investment.firebaseapp.com",
+  projectId: "kivicoin-investment",
+  storageBucket: "kivicoin-investment.firebasestorage.app",
+  messagingSenderId: "909683166689",
+  appId: "1:909683166689:web:205eda50a8c93b354916a0",
+  measurementId: "G-VTE676C8GQ",
 };
 
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
-const analytics = getAnalytics(app);
+const providor = new GoogleAuthProvider(); 
+const FacebookAuthProvidor = new FacebookAuthProvider(); 
 
-// Social Authentication Providers
-const googleProvider = new GoogleAuthProvider();
-const facebookProvider = new FacebookAuthProvider();
-const githubProvider = new GithubAuthProvider();
-
-export {
-  auth,
-  db,
-  analytics,
-  googleProvider,
-  facebookProvider,
-  githubProvider,
-};
+export { auth, providor, FacebookAuthProvidor };

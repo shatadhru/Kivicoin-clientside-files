@@ -1,19 +1,37 @@
 import { useEffect, useState } from "react";
 import Plan_Card from "../Components/Plan_Card";
 import axios from "axios";
-import { useData } from "../Components/Context/AuthenticateInvestor";
 
-function Plans() {
+function Plans({ UserEmail }) {
   const [packages, setPackagesData] = useState([]);
-  const { data } = useData();
+  const [packagesData, setPackagesDataFromEmail] = useState({});
+
+  // Function to fetch user-specific package data
+  const fetchUserPackageData = async (email) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/packages/data/register/user",
+        { email }
+      );
+      setPackagesDataFromEmail(response.data || {});
+    } catch (error) {
+      console.error("Error fetching user package data:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (UserEmail) {
+      fetchUserPackageData(UserEmail);
+    }
+  }, [UserEmail]);
 
   useEffect(() => {
     const fetchPackagesData = async () => {
       try {
         const response = await axios.get("http://localhost:5000/packages/data");
-        setPackagesData(response.data);
+        setPackagesData(response.data || []);
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching all packages:", error);
       }
     };
     fetchPackagesData();
@@ -33,27 +51,26 @@ function Plans() {
             <div className="space-y-4 bg-gray-800 p-6 rounded-xl">
               <div className="flex justify-between items-center">
                 <h3 className="text-xl font-semibold text-white">
-                  {data.package_name}
+                  {packagesData?.packages?.Package_Name || "No Package"}
                 </h3>
-                <span
-                  className={`px-3 py-1 rounded-full ${
-                    data.is_Authorised ? "bg-green-500" : "bg-red-500"
-                  } text-xs font-medium`}
-                >
-                  {data.is_Authorised ? "Active" : "Inactive"}
+                <span className="px-3 py-1 rounded-full bg-green-500 text-xs font-medium">
+                  Active
                 </span>
               </div>
 
               <div className="grid grid-cols-2 gap-4 text-gray-300">
-                <DetailItem label="Price" value={data.package_price} />
-                <DetailItem label="Duration" value={data.package_duration} />
                 <DetailItem
-                  label="Start Date"
-                  value={data.package_start_date}
+                  label="Price"
+                  value={packagesData?.packages?.price}
                 />
-                <DetailItem label="End Date" value={data.package_end_date} />
-                <DetailItem label="Discount" value={data.discount} />
-                <DetailItem label="Status" value={data.package_status} />
+                <DetailItem
+                  label="Duration"
+                  value={packagesData?.packages?.For__time}
+                />
+                <DetailItem label="Start Date" value="25|3|2025" />
+                <DetailItem label="End Date" value="25|3|2025" />
+                <DetailItem label="Discount" value="-" />
+                <DetailItem label="Status" value="Active" />
               </div>
             </div>
 
@@ -61,12 +78,12 @@ function Plans() {
             <div className="grid grid-cols-1 gap-6">
               <MetricCard
                 title="Total Profit"
-                value={data.total_profit}
+                value={packagesData?.total_profit || 0}
                 color="text-green-400"
               />
               <MetricCard
                 title="Total Investment"
-                value={data.total_investment}
+                value={packagesData?.total_investment || 0}
                 color="text-blue-400"
               />
             </div>
@@ -74,7 +91,7 @@ function Plans() {
         </div>
 
         {/* Explore Packages Section */}
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-white mb-10">
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-white">
           Explore Our <span className="text-[#ffb52b]">Investment Plans</span>
         </h2>
 
